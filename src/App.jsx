@@ -1,8 +1,54 @@
 import { useState, useEffect } from 'react'
+import emailjs from '@emailjs/browser'
 
 function App() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [currentSlide, setCurrentSlide] = useState(0)
+  
+  // Form state
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    message: ''
+  })
+  const [formStatus, setFormStatus] = useState('idle') // idle, loading, success, error
+
+  const handleInputChange = (e) => {
+    const { id, value } = e.target
+    setFormData(prev => ({ ...prev, [id]: value }))
+  }
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    setFormStatus('loading')
+
+    try {
+      await emailjs.send(
+        'service_h9drytl',
+        'template_z02mf1x',
+        {
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+          message: formData.message
+        },
+        'BplNyD2b98NgGNDzl'
+      )
+      
+      setFormStatus('success')
+      setFormData({ name: '', email: '', phone: '', message: '' })
+      
+      // Reset success message after 5 seconds
+      setTimeout(() => setFormStatus('idle'), 5000)
+    } catch (error) {
+      console.error('EmailJS Error:', error)
+      setFormStatus('error')
+      
+      // Reset error message after 5 seconds
+      setTimeout(() => setFormStatus('idle'), 5000)
+    }
+  }
 
   const carouselImages = [
     {
@@ -258,37 +304,75 @@ function App() {
                   <div className="contact-icon">✉️</div>
                   <div>
                     <h4>E-Mail</h4>
-                    <p>thomas@gmail.com</p>
-                  </div>
-                </li>
-                <li className="contact-item">
-                  <div className="contact-icon">🕐</div>
-                  <div>
-                    <h4>Bürozeiten</h4>
-                    <p>Mo - Di: 08:00 - 16:00 Uhr<br />Mi - Fr: 08:00 - 13:00 Uhr</p>
+                    <p>Thomas@hornungconsulting.ch</p>
                   </div>
                 </li>
               </ul>
             </div>
 
-            <form className="contact-form" onSubmit={(e) => e.preventDefault()}>
+            <form className="contact-form" onSubmit={handleSubmit}>
               <div className="form-group">
                 <label htmlFor="name">Name</label>
-                <input type="text" id="name" placeholder="Ihr Name" />
+                <input 
+                  type="text" 
+                  id="name" 
+                  placeholder="Ihr Name" 
+                  value={formData.name}
+                  onChange={handleInputChange}
+                  required
+                />
               </div>
               <div className="form-group">
                 <label htmlFor="email">E-Mail</label>
-                <input type="email" id="email" placeholder="Ihre E-Mail-Adresse" />
+                <input 
+                  type="email" 
+                  id="email" 
+                  placeholder="Ihre E-Mail-Adresse" 
+                  value={formData.email}
+                  onChange={handleInputChange}
+                  required
+                />
               </div>
               <div className="form-group">
                 <label htmlFor="phone">Telefon</label>
-                <input type="tel" id="phone" placeholder="Ihre Telefonnummer" />
+                <input 
+                  type="tel" 
+                  id="phone" 
+                  placeholder="Ihre Telefonnummer" 
+                  value={formData.phone}
+                  onChange={handleInputChange}
+                />
               </div>
               <div className="form-group">
                 <label htmlFor="message">Nachricht</label>
-                <textarea id="message" placeholder="Ihre Nachricht an uns"></textarea>
+                <textarea 
+                  id="message" 
+                  placeholder="Ihre Nachricht an uns"
+                  value={formData.message}
+                  onChange={handleInputChange}
+                  required
+                ></textarea>
               </div>
-              <button type="submit" className="btn btn-submit">Nachricht senden</button>
+              
+              {formStatus === 'success' && (
+                <div className="form-message success">
+                  Vielen Dank! Ihre Nachricht wurde erfolgreich gesendet.
+                </div>
+              )}
+              
+              {formStatus === 'error' && (
+                <div className="form-message error">
+                  Leider ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut.
+                </div>
+              )}
+              
+              <button 
+                type="submit" 
+                className="btn btn-submit"
+                disabled={formStatus === 'loading'}
+              >
+                {formStatus === 'loading' ? 'Wird gesendet...' : 'Nachricht senden'}
+              </button>
             </form>
           </div>
         </div>
@@ -329,7 +413,7 @@ function App() {
               <h4>Kontakt</h4>
               <ul className="footer-links">
                 <li><a href="tel:+491449349349">+49 144 9349349</a></li>
-                <li><a href="mailto:thomas@gmail.com">thomas@gmail.com</a></li>
+                <li><a href="mailto:Thomas@hornungconsulting.ch">Thomas@hornungconsulting.ch</a></li>
                 <li>Missionsstraße 24</li>
                 <li>4055 Basel, Schweiz</li>
               </ul>

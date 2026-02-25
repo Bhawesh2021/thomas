@@ -1639,6 +1639,38 @@ body {
   transform: translateY(-1px);
 }
 
+.btn-submit:disabled {
+  background: #cccccc;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* Form Messages */
+.form-message {
+  padding: 14px 16px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  font-size: 15px;
+  font-weight: 500;
+  text-align: center;
+  animation: slideInUp 0.4s ease-out;
+}
+
+.form-message.success {
+  background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
+  color: #166534;
+  border: 2px solid #22c55e;
+  box-shadow: 0 4px 12px rgba(34, 197, 94, 0.2);
+}
+
+.form-message.error {
+  background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+  color: #dc2626;
+  border: 2px solid #ef4444;
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
+}
+
 /* Footer */
 .footer {
   background: linear-gradient(135deg, var(--primary-color) 0%, rgb(20, 40, 70) 100%);
