@@ -466,7 +466,7 @@ function App() {
           
           <div className="footer-bottom">
             <p>© 2026 HORNUNG BUSINESS & TAX CONSULTING. Alle Rechte vorbehalten.</p>
-            <p className="footer-powered">Powered by Thetechlift and trendzomedia</p>
+            <p className="footer-powered">Powered by <a href="https://trendzomedia.com/" target="_blank" rel="noopener noreferrer">Thetechlift</a> and <a href="https://trendzomedia.com/" target="_blank" rel="noopener noreferrer">Trendzomedia</a></p>
           </div>
         </div>
       </footer>

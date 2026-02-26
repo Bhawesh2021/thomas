@@ -1897,6 +1897,21 @@ body {
   margin-bottom: 0;
 }
 
+.footer-powered a {
+  color: var(--accent-color);
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  border-bottom: 1px solid rgba(232, 185, 35, 0.5);
+  padding-bottom: 2px;
+}
+
+.footer-powered a:hover {
+  color: var(--accent-light);
+  border-bottom-color: var(--accent-color);
+  opacity: 0.9;
+}
+
 /* Responsive Design */
 @media (max-width: 1024px) {
   .services-grid {
