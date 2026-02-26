@@ -291,10 +291,29 @@ body {
   gap: 10px;
   text-decoration: none;
   transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  position: relative;
 }
 
 .logo:hover {
   transform: scale(1.08);
+}
+
+.logo::before {
+  content: '';
+  position: absolute;
+  left: -8px;
+  width: 70px;
+  height: 70px;
+  background: linear-gradient(135deg, rgba(232, 185, 35, 0.15), rgba(30, 58, 95, 0.1));
+  border-radius: 50%;
+  z-index: -1;
+  animation: pulse 3s ease-in-out infinite;
+  transition: all 0.4s ease;
+}
+
+.logo:hover::before {
+  background: linear-gradient(135deg, rgba(232, 185, 35, 0.25), rgba(30, 58, 95, 0.15));
+  animation: glow 2s ease-in-out infinite;
 }
 
 .logo-icon {
@@ -348,15 +367,23 @@ body {
 }
 
 .logo-image {
-  height: 50px;
+  height: 60px;
   width: auto;
-  border-radius: 8px;
+  border-radius: 50%;
   object-fit: contain;
   transition: all 0.4s ease;
+  background: linear-gradient(135deg, var(--accent-light), var(--white));
+  padding: 6px;
+  box-shadow: 0 4px 20px rgba(232, 185, 35, 0.2), 0 0 20px rgba(30, 58, 95, 0.1);
+  border: 2px solid var(--accent-color);
+  position: relative;
+  z-index: 1;
 }
 
 .logo:hover .logo-image {
-  filter: brightness(1.1);
+  filter: brightness(1.15) drop-shadow(0 0 12px rgba(232, 185, 35, 0.4));
+  transform: translateY(-4px);
+  box-shadow: 0 8px 30px rgba(232, 185, 35, 0.35), 0 0 30px rgba(30, 58, 95, 0.15);
 }
 
 /* Company Intro Section */
@@ -1731,14 +1758,28 @@ body {
   display: inline-block;
 }
 
+.footer-brand a .logo-image {
+  box-shadow: 0 4px 15px rgba(232, 185, 35, 0.3), 0 0 15px rgba(255, 255, 255, 0.1);
+  border-color: rgba(232, 185, 35, 0.8);
+}
+
 .footer-brand a:hover {
   transform: scale(1.05);
 }
 
 .footer-brand p {
-  opacity: 0.8;
+  opacity: 1;
   font-size: 15px;
   margin-top: 16px;
+  color: rgba(255, 255, 255, 0.95);
+  line-height: 1.6;
+}
+
+.footer-brand .logo-text {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--accent-color);
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
 .footer-column {
@@ -1847,6 +1888,13 @@ body {
   position: relative;
   z-index: 1;
   animation: slideInUp 0.8s ease-out 0.4s both;
+}
+
+.footer-powered {
+  font-size: 12px;
+  opacity: 0.6;
+  margin-top: 10px;
+  margin-bottom: 0;
 }
 
 /* Responsive Design */
@@ -1991,7 +2039,7 @@ body {
   }
   
   .logo-image {
-    height: 40px;
+    height: 50px;
   }
   
   .logo-text {
