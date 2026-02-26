@@ -12,15 +12,53 @@ function App() {
     phone: '',
     message: ''
   })
-  const [formStatus, setFormStatus] = useState('idle') // idle, loading, success, error
+  const [formStatus, setFormStatus] = useState('idle')
+  const [formErrors, setFormErrors] = useState({})
+
+  const validateForm = () => {
+    const errors = {}
+    if (!formData.name.trim()) {
+      errors.name = 'Bitte geben Sie Ihren Namen ein'
+    } else if (formData.name.trim().length < 2) {
+      errors.name = 'Name muss mindestens 2 Zeichen haben'
+    }
+    if (!formData.email.trim()) {
+      errors.email = 'Bitte geben Sie Ihre E-Mail-Adresse ein'
+    } else {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+      if (!emailRegex.test(formData.email)) {
+        errors.email = 'Bitte geben Sie eine gültige E-Mail-Adresse ein'
+      }
+    }
+    if (formData.phone.trim()) {
+      const phoneRegex = /^[\d\s\+\-\(\)]{7,}$/
+      if (!phoneRegex.test(formData.phone)) {
+        errors.phone = 'Bitte geben Sie eine gültige Telefonnummer ein'
+      }
+    }
+    if (!formData.message.trim()) {
+      errors.message = 'Bitte geben Sie eine Nachricht ein'
+    } else if (formData.message.trim().length < 10) {
+      errors.message = 'Nachricht muss mindestens 10 Zeichen haben'
+    }
+    return errors
+  }
 
   const handleInputChange = (e) => {
     const { id, value } = e.target
     setFormData(prev => ({ ...prev, [id]: value }))
+    if (formErrors[id]) {
+      setFormErrors(prev => ({ ...prev, [id]: '' }))
+    }
   }
 
   const handleSubmit = async (e) => {
     e.preventDefault()
+    const errors = validateForm()
+    if (Object.keys(errors).length > 0) {
+      setFormErrors(errors)
+      return
+    }
     setFormStatus('loading')
 
     try {
@@ -28,8 +66,9 @@ function App() {
         'service_h9drytl',
         'template_z02mf1x',
         {
+          to_email: 'satyams0478@gmail.com',
           name: formData.name,
-          email: formData.email,
+          from_email: formData.email,
           phone: formData.phone,
           message: formData.message
         },
@@ -38,6 +77,7 @@ function App() {
       
       setFormStatus('success')
       setFormData({ name: '', email: '', phone: '', message: '' })
+      setFormErrors({})
       
       // Reset success message after 5 seconds
       setTimeout(() => setFormStatus('idle'), 5000)
@@ -127,7 +167,7 @@ function App() {
         <div className="container">
           <div className="header-inner">
             <a href="#" className="logo">
-              <img src="/src/2.jpeg" alt="Logo" className="logo-image" />
+              <img src="/images/Logo in maroon.jpg.jpeg" alt="Logo" className="logo-image" />
               <span className="logo-text">HORNUNG BUSINESS & TAX CONSULTING</span>
             </a>
             
@@ -210,7 +250,7 @@ function App() {
       <section id="approach" className="approach">
         <div className="container">
           <div className="section-header">
-            <span className="section-label">Unser Ansatz</span>
+            <span className="section-label">Unser Ansatz </span>
             <h2 className="section-title">Ihr Erfolg ist unser Ziel</h2>
             <p className="section-description">Wir bieten persönliche, kundenorientierte Beratung mit Professionalismus und Effizienz.</p>
           </div>
@@ -263,9 +303,8 @@ function App() {
               </ul>
             </div>
             <div className="about-image">
-              <img src="/src/thomas.jpeg" alt="Thomas" className="about-image-img" />
+              <img src="/images/thomas.jpeg" alt="Thomas" className="about-image-img" />
               <h3 className="about-person-name">Thomas Hornung</h3>
-              <p className="about-person-title">Gründer & Steuerberater</p>
             </div>
           </div>
         </div>
@@ -297,7 +336,7 @@ function App() {
                   <div className="contact-icon">📞</div>
                   <div>
                     <h4>Telefon</h4>
-                    <p>+49 144 9349349</p>
+                    <p>+41 7844 47970</p>
                   </div>
                 </li>
                 <li className="contact-item">
@@ -310,28 +349,30 @@ function App() {
               </ul>
             </div>
 
-            <form className="contact-form" onSubmit={handleSubmit}>
+            <form className="contact-form" onSubmit={handleSubmit} noValidate>
               <div className="form-group">
-                <label htmlFor="name">Name</label>
+                <label htmlFor="name">Name *</label>
                 <input 
                   type="text" 
                   id="name" 
                   placeholder="Ihr Name" 
                   value={formData.name}
                   onChange={handleInputChange}
-                  required
+                  className={formErrors.name ? 'input-error' : ''}
                 />
+                {formErrors.name && <span className="error-text">{formErrors.name}</span>}
               </div>
               <div className="form-group">
-                <label htmlFor="email">E-Mail</label>
+                <label htmlFor="email">E-Mail *</label>
                 <input 
                   type="email" 
                   id="email" 
                   placeholder="Ihre E-Mail-Adresse" 
                   value={formData.email}
                   onChange={handleInputChange}
-                  required
+                  className={formErrors.email ? 'input-error' : ''}
                 />
+                {formErrors.email && <span className="error-text">{formErrors.email}</span>}
               </div>
               <div className="form-group">
                 <label htmlFor="phone">Telefon</label>
@@ -341,17 +382,20 @@ function App() {
                   placeholder="Ihre Telefonnummer" 
                   value={formData.phone}
                   onChange={handleInputChange}
+                  className={formErrors.phone ? 'input-error' : ''}
                 />
+                {formErrors.phone && <span className="error-text">{formErrors.phone}</span>}
               </div>
               <div className="form-group">
-                <label htmlFor="message">Nachricht</label>
+                <label htmlFor="message">Nachricht *</label>
                 <textarea 
                   id="message" 
                   placeholder="Ihre Nachricht an uns"
                   value={formData.message}
                   onChange={handleInputChange}
-                  required
+                  className={formErrors.message ? 'input-error' : ''}
                 ></textarea>
+                {formErrors.message && <span className="error-text">{formErrors.message}</span>}
               </div>
               
               {formStatus === 'success' && (
@@ -384,7 +428,7 @@ function App() {
           <div className="footer-grid">
             <div className="footer-brand">
               <a href="#" className="logo">
-                <img src="/src/2.jpeg" alt="Logo" className="logo-image" />
+                <img src="/images/Logo in maroon.jpg.jpeg" alt="Logo" className="logo-image" />
                 <span className="logo-text">HORNUNG BUSINESS & TAX CONSULTING</span>
               </a>
               <p>Ihr professionelles Beratungsunternehmen für Steuer, Recht und Betriebswirtschaft in Basel.</p>
@@ -412,7 +456,7 @@ function App() {
             <div className="footer-column">
               <h4>Kontakt</h4>
               <ul className="footer-links">
-                <li><a href="tel:+491449349349">+49 144 9349349</a></li>
+                <li><a href="tel:+417844 47970">+41 7844 47970</a></li>
                 <li><a href="mailto:Thomas@hornungconsulting.ch">Thomas@hornungconsulting.ch</a></li>
                 <li>Missionsstraße 24</li>
                 <li>4055 Basel, Schweiz</li>
@@ -421,7 +465,7 @@ function App() {
           </div>
           
           <div className="footer-bottom">
-            <p>© 2024 HORNUNG BUSINESS & TAX CONSULTING. Alle Rechte vorbehalten.</p>
+            <p>© 2026 HORNUNG BUSINESS & TAX CONSULTING. Alle Rechte vorbehalten.</p>
           </div>
         </div>
       </footer>
